@@ -34,7 +34,7 @@
   
 // App und Auth initialisieren
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+const auth = firebase.auth(app); // Authentifizierungsmodul initialisieren
 
 // Login mit Google
 function login() {
