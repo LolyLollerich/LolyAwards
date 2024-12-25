@@ -56,18 +56,27 @@ function logout() {
 </script>
 <script>
   function submitVote(question, answer) {
-      console.log(`Frage: ${question}, Antwort: ${answer}`);
-      db.ref(`votes/question_${question}`).push({
-          answer: answer,
-          timestamp: Date.now()
-      }, (error) => {
-          if (error) {
-              alert("Fehler beim Speichern der Antwort.");
-          } else {
-              alert(`Deine Antwort zu Frage ${question} wurde gespeichert: ${answer}`);
-          }
-      });
-  }
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Bitte logge dich ein, um abzustimmen.");
+        return;
+    }
+
+    const userId = user.uid;
+
+    db.ref(`votes/question_${question}/${userId}`).set({
+        answer: answer,
+        timestamp: Date.now()
+    }, (error) => {
+        if (error) {
+            alert("Fehler beim Speichern der Antwort.");
+        } else {
+            alert(`Deine Antwort zu Frage ${question} wurde gespeichert: ${answer}`);
+        }
+    });
+}
+
 </script>
 <script>
    
