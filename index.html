@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loly Awards</title>
+    
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-database-compat.js"></script>
+
+<script>
+  // Firebase-Konfiguration
+  const firebaseConfig = {
+      apiKey: "AIzaSyDdtKd2XQ2BDsEfBT151XqcxZ0zuHag_lU",
+      authDomain: "loly-awards.firebaseapp.com",
+      databaseURL: "https://loly-awards-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "loly-awards",
+      storageBucket: "loly-awards.firebasestorage.app",
+      messagingSenderId: "936941310946",
+      appId: "1:936941310946:web:44a77554068315d6891fbb",
+      measurementId: "G-S37EFLSJ40"
+  };
+
+  // Firebase initialisieren
+  firebase.initializeApp(firebaseConfig);
+
+  // Referenz auf die Datenbank
+  const db = firebase.database();
+</script>
+<script>
+  function submitVote(question, answer) {
+      console.log(`Frage: ${question}, Antwort: ${answer}`);
+      db.ref(`votes/question_${question}`).push({
+          answer: answer,
+          timestamp: Date.now()
+      }, (error) => {
+          if (error) {
+              alert("Fehler beim Speichern der Antwort.");
+          } else {
+              alert(`Deine Antwort zu Frage ${question} wurde gespeichert: ${answer}`);
+          }
+      });
+  }
+</script>
+<script>
+   
+    const adminPassword = "LolyAwards24";
+
+    
+
+function adminLogin() {
+    const passwordInput = document.getElementById("password").value;
+    const resultsDiv = document.getElementById("results");
+    const resultsData = document.getElementById("resultsData");
+
+    if (passwordInput === adminPassword) {
+        resultsDiv.style.display = "block";
+
+        // Ergebnisse abrufen
+        db.ref("votes").once("value").then((snapshot) => {
+            const data = snapshot.val();
+            displayResults(data);
+        }).catch((error) => {
+            console.error("Fehler beim Abrufen der Daten:", error);
+        });
+    } else {
+        alert("Falsches Passwort!");
+    }
+}
+
+
+    function displayResults(data) {
+        const resultsContainer = document.getElementById("resultsData");
+        resultsContainer.innerHTML = "";
+
+        for (const question in data) {
+            const answers = data[question];
+            const questionDiv = document.createElement("div");
+            questionDiv.innerHTML = `<h3>${question.replace("question_", "Frage ")}</h3>`;
+
+            const list = document.createElement("ul");
+            for (const key in answers) {
+                const answer = answers[key].answer;
+                const item = document.createElement("li");
+                item.textContent = answer;
+                list.appendChild(item);
+            }
+            questionDiv.appendChild(list);
+            resultsContainer.appendChild(questionDiv);
+        }
+    }
+</script>
+
+
+   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Patrick Hand', cursive;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2em auto;
+            background: white;
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 1.5em;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        .options button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .options button:hover {
+            background-color: #45a049;
+        }
+        .advertisements {
+            text-align: center;
+            margin-top: 2em;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        .ad-banner img {
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .stats {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .admin-login {
+            margin-top: 3em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Loly Awards</h1>
+    </header>
+
+    <!-- Werbung und Statistiken -->
+    <div class="advertisements">
+        <div class="ad-banner">
+            <a href="https://lolycrew.myspreadshop.at" target="_blank">
+                <img src="https://image.spreadshirtmedia.net/image-server/v1/compositions/T812A387PA5886PT17X55Y87D328342135W23508H16050/views/1,width=500,height=500,appearanceId=387,backgroundColor=ffffff,noPt=true/cowboy-loly.jpg" alt="Lolycrew Banner">
+            </a>
+        </div>
+        <div class="ad-banner">
+            <a href="https://morecosmetics.org" target="_blank">
+                <img src="https://pbs.twimg.com/profile_images/1215347503153008650/W4pbzIkR_400x400.jpg" alt="MoreCosmetics Banner">
+            </a>
+        </div>
+    </div>
+
+    <div class="stats">
+        <h2>Statistiken 2024</h2>
+        <p>Aufrufe: 941096</p>
+        <p>Wiedergabezeit: 11893 Stunden</p>
+        <p>Abonnenten: +332</p>
+        <p>Danke für alles! Ohne euch wäre dieses Jahr nicht so viel Content möglich gewesen. Ihr seid mir alle wichtig, und ich bin dankbar, dass ich euch habe.</p>
+    </div>
+
+    <!-- Fragen -->
+    <div class="container" id="polls">
+        <h2>Frage 1: Bestes Emote des Jahres</h2>
+        <div class="options">
+            <button onclick="submitVote(1, 'Emote 1')">Emote 1</button>
+            <img src="https://cdn.discordapp.com/emojis/1226548434484592732.webp?size=96" widht="20" height="500">
+            <button onclick="submitVote(1, 'Emote 2')">Emote 2</button>
+            <img src="https://cdn.discordapp.com/emojis/1100075685181136896.webp?size=96">
+            <button onclick="submitVote(1, 'Emote 3')">Emote 3</button>
+            <img src="https://cdn.discordapp.com/emojis/1104790285747232769.webp?size=96">
+        </div>
+
+       <h2>Frage 2: Bester Gaming Moment</h2>
+<div class="options">
+    <button onclick="submitVote(2, 'Boss nach 3 Stunden tot Loly Lollerich')">Boss nach 3 Stunden tot Loly Lollerich</button>
+    <a href="https://youtu.be/daXYnRC2Da8?si=ZSDo5CfsOZ55FxvL&t=4751" target="_blank">Video ansehen</a>
+    <button onclick="submitVote(2, 'Zu viel Spiel? Kenan')">Zu viel Spiel? Kenan</button>
+    <a href="https://youtu.be/qlGhapehdbI?si=GKfSk47iZWq0Z7kW" target="_blank">Video ansehen</a>
+    <button onclick="submitVote(2, 'All die Macht Benni Loly')">All die Macht Benni Loly</button>
+    <a href="https://youtu.be/qlGhapehdbI?si=GKfSk47iZWq0Z7kW" target="_blank">Video ansehen</a>
+</div>
+      
+        <h2>Frage 3: Beste Musikperformance</h2>
+        <div class="options">
+            <button onclick="submitVote(3, 'Lolycrew')">Lolycrew</button>
+            <a href="https://youtu.be/ZTNEqy1OWQs?si=nV2RmefIxFnqpaw7" target="_blank">Video ansehen</a>
+            <button onclick="submitVote(3, 'In die Unendlichkeit')">In die Unendlichkeit</button>
+            <a href="https://youtu.be/uvh-MrW7OEo?si=JHQ5qCB2zSe3FIoF" target="_blank">Video ansehen</a>
+        </div>
+
+        <h2>Frage 4: Bestes Projekt</h2>
+        <div class="options">
+            <button onclick="submitVote(4, 'Lolyattack v1 Loly')">Lolyattack v1 Loly</button>
+            <button onclick="submitVote(4, 'Minecraft Sky Kenan')">Minecraft Sky Kenan(Loly)</button>
+        </div>
+
+        <h2>Frage 5: Beste Cosmetics</h2>
+        <div class="options">
+            <button onclick="submitVote(5, 'Lolyattack v1 Cosmetics')">Lolyattack v1 Cosmetics</button>
+            <a href="https://youtu.be/jWymniuBAW8?si=AUJNx76u6o3hpqEx&t=29" target="_blank">Video ansehen</a> 
+            <button onclick="submitVote(5, 'Burning Earth Cosmetics')">Burning Earth Cosmetics</button>
+            <a href="https://youtu.be/Mqmn3nrFhto?si=nPtzWMm9yV_McjL7&t=45" target="_blank">Video ansehen</a>
+        </div>
+
+        <h2>Frage 6: Bester Rage Moment</h2>
+        <div class="options">
+            <button onclick="submitVote(6, 'Shit game Loly und Leo')">Shit game Loly und Leo</button>
+            <a href="https://youtu.be/daXYnRC2Da8?si=x3HU8f9Lkbs3czOm&t=2537" target="_blank">Video ansehen</a>
+            <button onclick="submitVote(6, 'Ganzer Stream ist eine Beleidigung Benni')">Ganzer Stream ist eine Beleidigung Benni</button>
+            <a href="https://www.youtube.com/live/ESiNrPtXTi4?si=djPOT9aL3yEWSRkq&t=1315" target="_blank">Video ansehen</a>
+        </div>
+
+        <h2>Frage 7: Bester Newcomer</h2>
+        <div class="options">
+            <button onclick="submitVote(7, 'Kenan')">Kenan</button>
+            <button onclick="submitVote(7, 'Leo')">Leo</button>
+            <button onclick="submitVote(7, 'Noah')">Noah</button>
+        </div>
+
+        <h2>Frage 8: Bestes Streamer Duo</h2>
+        <div class="options">
+            <button onclick="submitVote(8, 'Kenan & Noah')">Kenan & Noah</button>
+            <button onclick="submitVote(8, 'Loly & Benni')">Loly & Benni</button>
+            <button onclick="submitVote(8, 'Leo & Alex')">Leo & Alex</button>
+        </div>
+    </div>
+
+    <!-- Admin-Bereich -->
+    <div class="container admin-login">
+        <h2>Admin-Login</h2>
+        <form id="adminForm">
+            <label for="password">Passwort:</label>
+            <input type="password" id="password" placeholder="Admin-Passwort eingeben">
+            <button type="button" onclick="adminLogin()">Login</button>
+        </form>
+        <div id="results" style="display: none; margin-top: 1em;">
+            <h2>Ergebnisse</h2>
+            <pre id="resultsData">Keine Ergebnisse vorhanden.</pre>
+        </div>
+    </div>
+
+   
