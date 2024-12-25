@@ -31,18 +31,16 @@
   // Referenz auf die Datenbank
   const db = firebase.database();
   
-// Firebase Auth initialisieren
+// App und Auth initialisieren
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// Login-Funktion
+// Login mit Google
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
         .then((result) => {
-            const user = result.user;
-            document.getElementById("user-info").textContent = `Eingeloggt als: ${user.displayName}`;
-            document.getElementById("login-button").style.display = "none";
-            document.getElementById("logout-button").style.display = "block";
+            console.log("Eingeloggt:", result.user);
         })
         .catch((error) => {
             console.error("Login-Fehler:", error);
