@@ -29,6 +29,30 @@
 
   // Referenz auf die Datenbank
   const db = firebase.database();
+    const auth = firebase.auth();
+
+function login() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            const user = result.user;
+            document.getElementById("user-info").textContent = `Eingeloggt als: ${user.displayName}`;
+            document.getElementById("login-button").style.display = "none";
+            document.getElementById("logout-button").style.display = "block";
+        })
+        .catch((error) => {
+            console.error("Login-Fehler:", error);
+        });
+}
+
+function logout() {
+    auth.signOut().then(() => {
+        document.getElementById("user-info").textContent = "";
+        document.getElementById("login-button").style.display = "block";
+        document.getElementById("logout-button").style.display = "none";
+    });
+}
+
 </script>
 <script>
   function submitVote(question, answer) {
