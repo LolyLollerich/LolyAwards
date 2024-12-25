@@ -27,7 +27,8 @@
   };
 
   // Firebase initialisieren
-  firebase.initializeApp(firebaseConfig);
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth(app); // Authentifizierungsmodul initialisieren
 
   // Referenz auf die Datenbank
   const db = firebase.database();
