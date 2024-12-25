@@ -31,31 +31,31 @@
 
   // Referenz auf die Datenbank
   const db = firebase.database();
-  
-// App und Auth initialisieren
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth(app); // Authentifizierungsmodul initialisieren
+ 
+    <script type="module">
+    // Firebase SDKs importieren
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js"; 
 
-// Login mit Google
-function login() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-        .then((result) => {
-            console.log("Eingeloggt:", result.user);
-        })
-        .catch((error) => {
-            console.error("Login-Fehler:", error);
-        });
-}
+  // Firebase initialisieren
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-// Logout-Funktion
-function logout() {
-    auth.signOut().then(() => {
-        document.getElementById("user-info").textContent = "";
-        document.getElementById("login-button").style.display = "block";
-        document.getElementById("logout-button").style.display = "none";
-    });
-}
+// Beispiel: Login mit Google
+    function loginWithGoogle() {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                console.log("Erfolgreich eingeloggt:", result.user);
+            })
+            .catch((error) => {
+                console.error("Fehler beim Login:", error);
+            });
+    }
+
+      // Login-Button-Funktion
+    document.getElementById("loginButton").addEventListener("click", loginWithGoogle);
+</script>
 
 
 </script>
