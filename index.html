@@ -33,6 +33,11 @@
   const db = firebase.database();
   const auth = firebase.auth();
 
+    // Beispiel: Datenbankeintrag hinzufügen
+    function addVote(question, vote) {
+        database.ref(`votes/question_${question}`).push({ vote });
+    }
+    
 // Login mit Google
 function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -45,13 +50,9 @@ function loginWithGoogle() {
         });
 }
 
-    // Event-Listener für Login
-document.getElementById("loginButton").addEventListener("click", loginWithGoogle);
-      // Login-Button-Funktion
+     // Button-Listener hinzufügen
+    document.getElementById("voteButton").addEventListener("click", () => addVote("example", "Option 1"));
     document.getElementById("loginButton").addEventListener("click", loginWithGoogle);
-</script>
-
-
 </script>
 <script>
   function submitVote(question, answer) {
